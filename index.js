@@ -21,7 +21,6 @@ Trez - File encryption program making use of Trezor hardware wallet security.
 .example('$0 myfile.txt', 'Encrypt to myfile.txt.trez')
 .example('$0 myfile.txt.trez', 'Decrypt to myfile.txt')
 .example('$0 myfile.txt.trez -', 'Decrypt to standard out')
-.example('$0 myfile.txt.trez - | less', 'Preview')
 .example('$0 myfile.txt.trez /safe/myfile.txt', 'Decrypt')
 
 .help('help').alias('help', 'h').alias('help', '?').argv

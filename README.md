@@ -19,8 +19,28 @@ only use Trez on a secondary copy of your data.  Here are some use cases:
 # Usage
 
 ```bash
-npm install -g trez
-trez -?
+$ npm install -g trez
+
+$ trez -?
+
+Trez - File encryption program making use of Trezor hardware wallet security.
+
+
+Options:
+  --clipboard-save, -s  Save next clipboard copy to an encrypted file (clears
+                        the clipboard).                                 [string]
+  --clipboard-load, -l  Load the clipboard with decrypted data.         [string]
+  --force               Force overwrite file                           [boolean]
+  --help, -h, -?        Show help                                      [boolean]
+
+Examples:
+  trez --clipboard-save [myfile.txt.trez, omit to generate filename]
+  trez --clipboard-load myfile.txt.trez
+  trez myfile.txt                           Encrypt to myfile.txt.trez
+  trez myfile.txt.trez                      Decrypt to myfile.txt
+  trez myfile.txt.trez -                    Decrypt to standard out
+  trez myfile.txt.trez /safe/myfile.txt     Decrypt
+
 ```
 
 # Trez file format
@@ -47,7 +67,7 @@ you understand any potential privacy issues:
 
 # Environment
 
-Node 6+ and browser (browserify, webpack, etc)
+Node 6+
 
 # Disclaimer
 
