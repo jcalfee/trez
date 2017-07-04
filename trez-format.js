@@ -5,7 +5,8 @@ const assert = require('assert')
 module.exports = {
   encrypt,
   decrypt,
-  dissect
+  dissect,
+  check
 }
 
 const defaultTrezorMsg = 'Trez Cypher'
@@ -86,7 +87,7 @@ function encrypt(session, data, config) {
 
     // Encrypt only a secret using the device
     // then encrypt the data using the secret..
-    return session.cipherKeyValue(address, trezorMsg, Buffer.from(secret),
+    return session.cipherKeyValue(address, trezorMsg, secret,
       true/*encrypt*/, askOnEncrypt, askOnDecrypt, iv)
     .then(enc => {
       const encSecret = Buffer.from(enc.message.value, 'hex')
@@ -94,16 +95,25 @@ function encrypt(session, data, config) {
         throw new Error('invalid secret length')
       }
 
-      const header = JSON.stringify({
+      const trezorParams = {
         address,
         trezorMsg,
         encSecret: enc.message.value,
         askOnEncrypt,
         askOnDecrypt,
         iv
-      }, null, 2)
+      }
 
-      return Buffer.concat([Buffer.from(header + '\n'), secretboxEncrypt(data, secret)])
+      const encData = secretboxEncrypt(data, secret)
+      const encrypedDataSha256 = createHash('sha256').update(encData).digest().toString('hex')
+      const trezorParamsSha256 = createHash('sha256').update(JSON.stringify(trezorParams)).digest().toString('hex')
+
+      const validationParams = {
+        encrypedDataSha256, trezorParamsSha256
+      }
+
+      const headers = JSON.stringify(Object.assign(trezorParams, validationParams), null, 2)
+      return Buffer.concat([Buffer.from(headers + '\n'), encData])
     })
   })
 }
@@ -130,6 +140,28 @@ function dissect(data) {
     throw error
   }
   return {header, dataIndex}
+}
+
+function check(data) {
+  let checkHeaders
+  try {
+    checkHeaders = dissect(data)
+  } catch(error) {
+    return {validData: false, validHeader: false}
+  }
+  const {header: {address, trezorMsg, encSecret, askOnEncrypt, askOnDecrypt, iv}} = checkHeaders
+  const {dataIndex} = checkHeaders
+
+  const trezorParams = {address, trezorMsg, encSecret, askOnEncrypt, askOnDecrypt, iv}
+  const trezorParamsSha256 = createHash('sha256').update(JSON.stringify(trezorParams)).digest().toString('hex')
+
+  const encryptedData = data.slice(dataIndex)
+  const encrypedDataSha256 = createHash('sha256').update(encryptedData).digest().toString('hex')
+
+  const validData = encrypedDataSha256 === checkHeaders.header.encrypedDataSha256
+  const validHeader = trezorParamsSha256 === checkHeaders.header.trezorParamsSha256
+
+  return {validData, validHeader}
 }
 
 function decrypt(session, data) {

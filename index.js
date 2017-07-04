@@ -14,7 +14,8 @@ Trez - File encryption program making use of Trezor hardware wallet security.
 `)
 .option('clipboard-save', {describe: 'Save next clipboard copy to an encrypted file (clears the clipboard).', type: 'string', alias: 's'})
 .option('clipboard-load', {describe: 'Load the clipboard with decrypted data.', type: 'string', alias: 'l'})
-.option('force', {describe: 'Force overwrite file', type: 'boolean'})
+.option('force', {describe: 'Force overwrite file', type: 'boolean', alias: 'f'})
+.option('check', {describe: 'Check a trez file', type: 'string', alias: 'k'})
 .example('$0 --clipboard-save [myfile.txt.trez, omit to generate filename]')
 .example('$0 --clipboard-load myfile.txt.trez')
 
@@ -28,6 +29,7 @@ Trez - File encryption program making use of Trezor hardware wallet security.
 const files = argv._
 const clipboardToFile = argv['clipboard-save']
 const clipboardFromFile = argv['clipboard-load']
+const check = argv['check']
 const force = argv['force']
 
 // The implementation below, based on arguments will define only one:
@@ -49,6 +51,23 @@ let saveBuffer
 /** @return {undefined|Promise} complete */
 let onSuccess = () => {}
 
+
+if(check) {
+  if(!fs.existsSync(check)) {
+    console.error('File does not exist: ' + check)
+    process.exit(1)
+  }
+
+  const data = fs.readFileSync(check)
+  const {validData, validHeader} = trez.check(data)
+  if(!validData || !validHeader) {
+    console.error(`Invalid file: ${check}${validData ? '' : ', invalid data'}${validHeader ? '': ', invalid header'}`)
+    process.exit(1)
+  }
+
+  console.error(`OK!`)
+  process.exit(0)
+}
 
 if(files.length && (clipboardToFile || clipboardFromFile)) {
   console.error('Please work with files or the clipboard but not both')
