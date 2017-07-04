@@ -11,8 +11,8 @@ encrypted unless needed.
 Trez can add convenience and security, however, this is Beta software so you should
 only use Trez on a secondary copy of your data.  Here are some use cases:
 
-- Move encrypted partitions to cold storage storage then use trez files to copy
-  data from cold storage.
+- Create cold-storage backups
+- Use trez files to copy data to and from cold storage (keeping the USB clean).
 - Keep encrypted partitions locked more often by extract commonly use data into
   Trez files.
 

@@ -1,6 +1,6 @@
 {
   "name": "trez",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Encrypt or decrypt files using a Trezor hardware wallet.",
   "main": "index.js",
   "bin": "index.js",
