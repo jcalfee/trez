@@ -53,12 +53,11 @@ Please keep in mind the following safety design decisions were made.  Make sure
 you understand any potential privacy issues:
 
 - It is easy to identify a Trez file by looking at the data
-- The Trezor's device label is saved in plain text in the trez file (that device
+- The Trezor's device label is saved in plain text in the trez file (this label
   is required to decrypt).
 - The Trezor confirmation message is saved in plain text in the trez file (this
   phrase is required to decrypt).
-- A device confirmation to decrypt is required.  However, unless Trezor is
-  configured to prompt for a passphrase or needs the PIN, a confirmation to
+- A device confirmation to decrypt is used.  However, a confirmation to
   encrypted is not used.
 
 # Requirements
@@ -68,8 +67,3 @@ you understand any potential privacy issues:
 # Environment
 
 Node 6+
-
-# Disclaimer
-
-No warranty.  Audit the code or have someone check this for you.  Your fully
-responsible for your own security.
