@@ -11,6 +11,8 @@ const trez = require('./trez-format')
 
 const argv = require('yargs').usage(`
 Trez - File encryption program making use of Trezor hardware wallet security.
+
+Standard input is used for trezor prompts (pin, passphrase).
 `)
 .option('clipboard-save', {describe: 'Save next clipboard copy to an encrypted file (clears the clipboard).', type: 'string', alias: 's'})
 .option('clipboard-load', {describe: 'Load the clipboard with decrypted data.', type: 'string', alias: 'l'})
@@ -19,6 +21,7 @@ Trez - File encryption program making use of Trezor hardware wallet security.
 .example('$0 --clipboard-save [myfile.txt.trez, omit to generate filename]')
 .example('$0 --clipboard-load myfile.txt.trez')
 
+.example('$0 myfile.txt newfile.trez', 'Encrypt to newfile.trez')
 .example('$0 myfile.txt', 'Encrypt to myfile.txt.trez')
 .example('$0 myfile.txt.trez', 'Decrypt to myfile.txt')
 .example('$0 myfile.txt.trez -', 'Decrypt to standard out')
@@ -188,6 +191,7 @@ function loadFile(fn) {
   fn = fn.trim()
   let buf
   if(fn === '-') {
+    // trezor prompts interfere
     console.error('data source can not be an standard input')
     process.exit(1)
   } else if(fn === '') {
