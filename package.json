@@ -17,7 +17,7 @@
     "libsodium-wrappers": "^0.5.4",
     "sb-promisify": "^2.0.2",
     "secure-random": "^1.1.1",
-    "trezor-session": "^1.0.2",
+    "trezor-session": "^1.0.3",
     "uuid": "^3.2.1",
     "yargs": "^8.0.2"
   }
