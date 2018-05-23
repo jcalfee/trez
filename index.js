@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require("babel-polyfill")
 
 const co = require('co')
 const fs = require('fs')
