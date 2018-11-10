@@ -1,5 +1,7 @@
 [![NPM](https://img.shields.io/npm/v/trez.svg)](https://www.npmjs.org/package/trez)
 
+Warning: the 3rd party USB/HID connector is unsable may break between node releases.
+
 # About
 
 Encrypt or decrypt files using a Trezor hardware wallet.
